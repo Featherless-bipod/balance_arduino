@@ -1,0 +1,3 @@
+[submodule "arduino_code/Matrix"]
+	path = arduino_code/Matrix
+	url = https://github.com/essenius/Matrix.git
