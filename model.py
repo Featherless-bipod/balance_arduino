@@ -14,6 +14,9 @@ class MLPmodel(nn.Module):
             nn.Linear(input_size,embed_size),
             nn.ReLU(),
             nn.Dropout(0.3),
+            nn.Linear(embed_size,embed_size),
+            nn.ReLU(),
+            nn.Dropout(0.3)
         )
         self.classifier = nn.Linear(embed_size,output_size)
     
@@ -48,7 +51,7 @@ def plot(fig, ax1, ax2, train_loss, test_loss, f1_train, f1_test):
 
     return
 
-def train_model(model, criterion, optimizer, train_loader, test_loader, num_epochs =500):
+def train_model(model, criterion, optimizer, train_loader, test_loader, num_epochs =50):
     train_losses = []
     test_losses = []
     train_f1 = []
@@ -96,4 +99,6 @@ def train_model(model, criterion, optimizer, train_loader, test_loader, num_epoc
         test_f1.append(f1_score(np.vstack(all_test_labels), np.vstack(all_test_preds), average='micro'))
 
         plot(fig, ax1, ax2,train_losses, test_losses, train_f1, test_f1)
+
+    print(f"loss: {test_losses[-1]}; f1: {test_f1[-1]}")
 
