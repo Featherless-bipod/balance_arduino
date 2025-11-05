@@ -1,1 +1,0 @@
-idf.py add-dependency "espressif/esp-dsp"

@@ -1,75 +1,91 @@
-#include <BluetoothSerial.h>
 #include <ArduinoBLE.h>
-#include <BasicLinearAlgebra.h>
+//#include <BasicLinearAlgebra.h>
 
-BLEService streamService("12345678-1234-5678-1234-56789abcdef0");  // random UUID
+// Define pins
+const int inputPin1 = 2;
+const int inputPin2 = 3;
+const int inputPin3 = 4;
+const int inputPin4 = 5;
+
+// Define BLE Service and Characteristic
+BLEService streamService("12345678-1234-5678-1234-56789abcdef0");
 BLECharacteristic streamChar("12345678-1234-5678-1234-56789abcdef1",
                              BLERead | BLENotify,  // readable + notify
-                             244);                 // max len you *want* (cap at 244 if supported)
-
-
-void setup(){
-    
-    Serial.begin(115200);
-    while (!Serial) {}
-
-    int inputPin1 = 2;
-    int inputPin2 = 3;
-    int inputPin3 = 4;
-    int inputPin4 = 5;
-
-    if (!BLE.begin()) {
-        Serial.println("BLE init failed!");
-        while (1);
-    }
-
-    serialBT.begin("Esp32-BT");
-
-    BLE.setLocalName("BalanceBuds");
-    BLE.setAdvertisedService(streamService);
-    streamService.addCharacteristic(streamChar);
-    BLE.addService(streamService);
-    streamChar.writeValue((const unsigned char *)"init", 4); // initial value
-
-    BLE.advertise();
-    Serial.println("Advertising...");
-
-    int weight_matrix = 
-    int bias_matrix = 
- }
+                             20);                  // payload length (max ~244)
 
 unsigned long lastSend = 0;
 uint32_t seq = 0;
 
-void loop(){
-    int input1 = digitalRead(inputPin1);
-    int input2 = digitalRead(inputPin2);
-    int input3 = digitalRead(inputPin3);
-    int input4 = digitalRead(inputPin4);
+void setup() {
+  Serial.begin(115200);
+  while (!Serial);
 
-    BLEDevice central = BLE.central();
-    if (central) {
-        Serial.print("Connected to central: ");
-        Serial.println(central.address());
+  // Initialize pins
+  pinMode(inputPin1, INPUT_PULLUP);
+  pinMode(inputPin2, INPUT_PULLUP);
+  pinMode(inputPin3, INPUT_PULLUP);
+  pinMode(inputPin4, INPUT_PULLUP);
 
-        while (central.connected()) {
-        // prepare payload - example: 8-byte packet (seq + timestamp)
-        uint8_t buf[12];
-        memcpy(buf + 0, &seq, 4);
-        uint32_t now = (uint32_t)millis();
-        memcpy(buf + 4, &now, 4);
-        float sample = analogRead(A0) * (3.3 / 1023.0);
-        memcpy(buf + 8, &sample, 4); // careful with endianness
+  // Initialize BLE
+  if (!BLE.begin()) {
+    Serial.println("Starting BLE failed!");
+    while (1);
+  }
 
-        // Attempt to write the value. This may block or fail if radio busy.
-        // Adjust payload length to negotiated MTU in advanced implementations.
-        bool ok = streamChar.writeValue(buf, sizeof(buf));
+  BLE.setLocalName("BalanceBuds");
+  BLE.setAdvertisedService(streamService);
+  streamService.addCharacteristic(streamChar);
+  BLE.addService(streamService);
+
+  // Initial value
+  streamChar.writeValue("init");
+
+  BLE.advertise();
+  Serial.println("BLE Advertising as BalanceBuds...");
+}
+
+void loop() {
+  BLEDevice central = BLE.central();
+
+  if (central) {
+    Serial.print("Connected to central: ");
+    Serial.println(central.address());
+
+    while (central.connected()) {
+      unsigned long now = millis();
+      if (now - lastSend >= 100) {  // send every 100 ms
+        lastSend = now;
+
+        int in1 = digitalRead(inputPin1);
+        int in2 = digitalRead(inputPin2);
+        int in3 = digitalRead(inputPin3);
+        int in4 = digitalRead(inputPin4);
+
+        float analogVal = analogRead(A0) * (3.3 / 1023.0);
+
+        struct __attribute__((packed)) {
+          uint32_t seq;
+          uint32_t timestamp;
+          float analogVal;
+          uint8_t digital[4];
+        } payload;
+
+        payload.seq = seq++;
+        payload.timestamp = millis();
+        payload.analogVal = analogVal;
+        payload.digital[0] = in1;
+        payload.digital[1] = in2;
+        payload.digital[2] = in3;
+        payload.digital[3] = in4;
+
+        bool ok = streamChar.writeValue((uint8_t *)&payload, sizeof(payload));
+
         if (!ok) {
-            // optional: back off slightly or count failures
+          Serial.println("⚠️ BLE send failed (radio busy)");
         }
-        seq++;
-        // delay(1); micro-delay if needed
-        }
-        Serial.println("Central disconnected");
+      }
+    }
+
+    Serial.println("Central disconnected");
   }
 }
