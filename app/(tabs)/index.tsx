@@ -10,6 +10,7 @@ export default function TabThreeScreen() {
   const colorL = useThemeColor({}, 'colorL');
   const colorR = useThemeColor({}, 'colorR');
 
+  // functionality for Timer
   const INITIAL_SECONDS = 1 * 60; // 5 minutes
   const [timeLeft, setTimeLeft] = useState<number>(INITIAL_SECONDS);
   const [buttonLabel, setButtonLabel] = useState<string>('Start');
@@ -66,6 +67,14 @@ export default function TabThreeScreen() {
     return `${m}:${String(s).padStart(2, '0')}`;
   }
 
+  // Functionality for Connect button
+  const [connectLabel, setConnectLabel] = useState<string>('Not Connected');
+  const updateConnect = () => setConnectLabel(prev => (prev === 'Not Connected' ? 'Success!' : 'Not Connected'));
+
+  const connectDevice = () => {
+    updateConnect();
+  }
+
   return (
     <ThemedView style={styles.mainContainer}>
       <ThemedView style={[styles.titleContainer, { backgroundColor: tint }]}> 
@@ -77,13 +86,15 @@ export default function TabThreeScreen() {
       <ThemedView style={[styles.colContainer, { marginTop: 10, paddingBottom: 10, flex: 1, minHeight: 40 }]}>
         <ThemedView style={[styles.column, { marginRight: 10, flex: 3, justifyContent: 'center' }]}> 
           <ThemedText type="subtitle">Connect device:</ThemedText>
-          <ThemedText>Successfully connected!</ThemedText>
+          <ThemedText>{connectLabel}</ThemedText>
         </ThemedView>
 
         <ThemedView style={[styles.column, { marginLeft: 10, flex: 2, justifyContent: 'center', alignItems: 'flex-end' }]}> 
-          <ThemedView style={{ minWidth: 125, backgroundColor: tint, padding: 10, borderRadius: 10}}>
-            <ThemedText type="subtitle" style={{ textAlign: 'center' }}>Connect</ThemedText>
-          </ThemedView>
+          <Pressable onPress={connectDevice}>
+            <ThemedView style={{ minWidth: 125, backgroundColor: tint, padding: 10, borderRadius: 10}}>
+              <ThemedText type="subtitle" style={{ textAlign: 'center' }}>Connect</ThemedText>
+            </ThemedView>
+          </Pressable>
         </ThemedView>
       </ThemedView>
 
