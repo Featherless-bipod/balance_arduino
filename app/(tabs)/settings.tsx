@@ -7,31 +7,30 @@ import { StyleSheet, Text, View } from 'react-native';
 //import MySearchIcon from '@/components/icons/foot-print';
 
 export default function TabThreeScreen() {
-  const tint = useThemeColor({}, 'tint');
+  const titleBg = useThemeColor({}, 'tint');
   const colorL = useThemeColor({}, 'colorL');
   const colorR = useThemeColor({}, 'colorR');
   
   return (
     <ThemedView style={styles.mainContainer}>
-      <ThemedView style={[styles.titleContainer, {backgroundColor: tint}]}>
-        <ThemedText type="title" style={{fontWeight: 'bold', fontFamily: Fonts.rounded,}}>Balance Exercise</ThemedText>
+      
+      
+      <ThemedView style={[styles.titleContainer, {backgroundColor: titleBg}]}>
+        <ThemedText type="title" style={{fontFamily: Fonts.rounded,}}>Balance Exercise</ThemedText>
       </ThemedView>
 
-      <ThemedView style={{ height: 0 }}></ThemedView>
-
-      <ThemedView style={[styles.colContainer, {marginTop: 10, paddingBottom: 10, flex: 1, minHeight: 40}]}>
-        <ThemedView style={[styles.column, {marginRight: 10, flex: 3, justifyContent: 'center'}]}>
-          <ThemedText type='subtitle'>Connect device:</ThemedText>
-          <ThemedText>Successfully connected!</ThemedText>
-          </ThemedView>
-        <ThemedView style={[styles.column, {marginLeft: 10, flex: 2, justifyContent: 'center', alignItems: 'flex-end'}]}>
-            <ThemedView style={{minWidth: 125, backgroundColor: tint, padding: 10}}>
-              <ThemedText type='subtitle' style={{textAlign: 'center'}}>Connect</ThemedText>
-            </ThemedView>
-            
-          </ThemedView>
+      <ThemedView style={{ height: 0 }}>
+        
       </ThemedView>
 
+      <ThemedView style={[styles.colContainer, {marginTop: 20, flex: 1, minHeight: 40}]}>
+        <ThemedView style={[styles.column, {marginRight: 10, flex: 1}]}>
+          <ThemedText>Turn </ThemedText>
+          </ThemedView>
+        <ThemedView style={[styles.column, {marginLeft: 10, flex: 1}]}>
+          <ThemedText>Connect</ThemedText>
+          </ThemedView>
+      </ThemedView>
 
       <ThemedView style={[styles.colContainer, {flex: 6}]} >
         <ThemedView style={[styles.column, {marginRight: 10, flex: 1}]}>
@@ -50,21 +49,11 @@ export default function TabThreeScreen() {
         </ThemedView>
       </ThemedView>
 
-      <ThemedView style={[styles.colContainer, {padding: 10, flex: 1, justifyContent: "center", alignContent: "center"}]}>
-        <ThemedView style={{paddingRight: 10, justifyContent: "center", alignContent: "center"}}>
-          <ThemedText type="title" style={{}}>Timer:</ThemedText>
-        </ThemedView>
-        
-        <ThemedView style={{paddingLeft: 10, paddingRight: 10, justifyContent: "center", alignContent: "center"}}>
-          <ThemedText type="title" style={{fontSize: 42, lineHeight: 40}}>5:00</ThemedText>
-        </ThemedView>
-
+      <ThemedView style={[styles.body, {flex: 2, justifyContent: "center"}]}>
+        <ThemedText type="subtitle" style={{textAlign: "center"}}>Timer:</ThemedText>
+        <ThemedText style={{fontSize: 20}}/>
+        <ThemedText type="title" style={{fontSize: 32, textAlign: "center"}}>5:00</ThemedText>
       </ThemedView>
-      <ThemedView style={{paddingBottom: 20, justifyContent: "center", alignItems: "center"}}>
-          <ThemedView style={{backgroundColor: tint, padding: 15, paddingBottom: 15, width: "50%"}}> 
-            <ThemedText type="title" style={{textAlign: "center"}}>Start!</ThemedText>
-          </ThemedView>
-        </ThemedView>
     </ThemedView>
   );
 }

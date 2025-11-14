@@ -1,44 +1,50 @@
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Fonts } from '@/constants/theme';
-import { StyleSheet, View } from 'react-native';
-
-
-
+import { useThemeColor } from '@/hooks/use-theme-color';
+import { StyleSheet, Text, View } from 'react-native';
 
 //import MySearchIcon from '@/components/icons/foot-print';
 
 export default function TabThreeScreen() {
+  const titleBg = useThemeColor({}, 'tint');
+  const colorL = useThemeColor({}, 'colorL');
+  const colorR = useThemeColor({}, 'colorR');
+  
   return (
     <ThemedView style={styles.mainContainer}>
       
       
-      <ThemedView style={styles.titleContainer}>
+      <ThemedView style={[styles.titleContainer, {backgroundColor: titleBg}]}>
         <ThemedText type="title" style={{fontFamily: Fonts.rounded,}}>Balance Exercise</ThemedText>
       </ThemedView>
 
-      <ThemedView style={[styles.body, {flex: 1, minHeight: 40}]}>
-        <ThemedText>Turn on your Balance Buzz pad and perform your balance exercise.</ThemedText>
+      <ThemedView style={{ height: 0 }}>
+        
+      </ThemedView>
+
+      <ThemedView style={[styles.colContainer, {marginTop: 20, flex: 1, minHeight: 40}]}>
+        <ThemedView style={[styles.column, {marginRight: 10, flex: 1}]}>
+          <ThemedText>Turn </ThemedText>
+          </ThemedView>
+        <ThemedView style={[styles.column, {marginLeft: 10, flex: 1}]}>
+          <ThemedText>Connect</ThemedText>
+          </ThemedView>
       </ThemedView>
 
       <ThemedView style={[styles.colContainer, {flex: 6}]} >
         <ThemedView style={[styles.column, {marginRight: 10, flex: 1}]}>
-          <View style={{height: 50, justifyContent: "center"}}>
-            <ThemedText type={"subtitle"} style={{textAlign: "center"}}>Left</ThemedText>
-          </View>
-    
-          <View style={[styles.body, {backgroundColor: "#d83c3cff", flex: 7}]}>
-            <ThemedText> </ThemedText> 
+              
+          <View style={[styles.body, {backgroundColor: colorL, flex: 7, justifyContent: 'center', alignItems: 'center' }]}>
+            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 64, lineHeight: 70, fontFamily: Fonts.rounded}}>L</Text>
           </View>
         </ThemedView>
 
         <ThemedView style={[styles.column, {marginLeft: 10, flex: 1}]}>
-          <View style={{height: 50, justifyContent: "center"}}>
-            <ThemedText type={"subtitle"} style={{textAlign: "center"}}>Right</ThemedText>
-          </View>
-    
-          <View style={[styles.body, {backgroundColor: "#3939e8ff", flex: 7}]}>
-            <ThemedText> </ThemedText>
+              
+          <View style={[styles.body, {backgroundColor: colorR, flex: 7, justifyContent: 'center', alignItems: 'center' }]}>
+            
+            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 64, lineHeight: 70, fontFamily: Fonts.rounded}}>R</Text>
           </View>
         </ThemedView>
       </ThemedView>
@@ -52,15 +58,10 @@ export default function TabThreeScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    backgroundColor: '#6da6dcff',
+    titleContainer: {
+    backgroundColor: '#A0C1D6',
     padding: 20,
     flexDirection: 'row',
     gap: 8,
