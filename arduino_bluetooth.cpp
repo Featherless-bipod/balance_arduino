@@ -2,10 +2,12 @@
 //#include <BasicLinearAlgebra.h>
 
 // Define pins
-const int inputPin1 = 2;
-const int inputPin2 = 3;
-const int inputPin3 = 4;
-const int inputPin4 = 5;
+const int inputPin1 = 14;
+const int inputPin2 = 27;
+const int inputPin3 = 26;
+const int inputPin4 = 25;
+
+#define ANALOG_PIN 34
 
 // Define BLE Service and Characteristic
 BLEService streamService("12345678-1234-5678-1234-56789abcdef0");
@@ -61,7 +63,7 @@ void loop() {
         int in3 = digitalRead(inputPin3);
         int in4 = digitalRead(inputPin4);
 
-        float analogVal = analogRead(A0) * (3.3 / 1023.0);
+        float analogVal = analogRead(ANALOG_PIN) * (3.3 / 1023.0);
 
         struct __attribute__((packed)) {
           uint32_t seq;
